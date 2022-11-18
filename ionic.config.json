@@ -1,0 +1,7 @@
+{
+  "name": "quicfy",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
