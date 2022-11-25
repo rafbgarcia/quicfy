@@ -1,0 +1,35 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY {
+  globalAuthRule: AuthRule = { allow: public }
+} # FOR TESTING ONLY!
+type Company @model {
+  id: ID!
+  name: String!
+  apiKey: String
+  webhooks: [Webhook] @hasMany(indexName: "byCompany", fields: ["id"])
+}
+
+type Webhook @model {
+  id: ID!
+  companyID: ID! @index(name: "byCompany")
+  url: String!
+  event: WebhookEvent! @index(name: "byEvent")
+}
+
+type PaymentIntent @model {
+  id: ID!
+  companyID: ID!
+  customerID: ID! @index(name: "byCustomer", sortKeyFields: ["createdAt"])
+  createdAt: AWSDateTime!
+}
+
+type Customer @model {
+  quicID: ID! @primaryKey
+  paymentIntents: [PaymentIntent]
+    @hasMany(indexName: "byCustomer", fields: ["quicID"])
+}
+
+enum WebhookEvent {
+  new_payment
+}
