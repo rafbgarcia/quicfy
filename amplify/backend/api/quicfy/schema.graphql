@@ -7,15 +7,15 @@ type Company @model {
   id: ID!
   name: String!
   apiKey: String
-  webhooks: [Webhook] @hasMany(indexName: "byCompany", fields: ["id"])
+  # webhooks: [Webhook] @hasMany(indexName: "byCompany", fields: ["id"])
 }
 
-type Webhook @model {
-  id: ID!
-  companyID: ID! @index(name: "byCompany")
-  url: String!
-  event: WebhookEvent! @index(name: "byEvent")
-}
+# type Webhook @model {
+#   id: ID!
+#   companyID: ID! @index(name: "byCompany")
+#   url: String!
+#   event: WebhookEvent! @index(name: "byEvent")
+# }
 
 type PaymentIntent @model {
   id: ID!
@@ -26,6 +26,9 @@ type PaymentIntent @model {
 
 type Customer @model {
   quicID: ID! @primaryKey
+  firstName: String
+  lastName: String
+  cpf: String
   paymentIntents: [PaymentIntent]
     @hasMany(indexName: "byCustomer", fields: ["quicID"])
 }

@@ -6,11 +6,10 @@ const WebhookEvent = {
   "NEW_PAYMENT": "new_payment"
 };
 
-const { Company, Webhook, PaymentIntent, Customer } = initSchema(schema);
+const { Company, PaymentIntent, Customer } = initSchema(schema);
 
 export {
   Company,
-  Webhook,
   PaymentIntent,
   Customer,
   WebhookEvent

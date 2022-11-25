@@ -9,7 +9,17 @@
       "UnauthRoleName": "amplify-quicfy-main-234548-unauthRole",
       "StackName": "amplify-quicfy-main-234548",
       "StackId": "arn:aws:cloudformation:sa-east-1:128777745898:stack/amplify-quicfy-main-234548/f6be5460-66d1-11ed-83f5-0212b9b4aeae",
-      "AmplifyAppId": "d1k1rcowbj9dqw"
+      "AmplifyAppId": "d1k1rcowbj9dqw",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-quicfy-main-234548-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "userPoolGroups": {},
+        "quicfyauth": {}
+      },
+      "api": {
+        "quicfy": {}
+      }
     }
   }
 }
