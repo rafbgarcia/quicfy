@@ -1,8 +1,6 @@
 import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from "@ionic/react"
 import { IonReactRouter } from "@ionic/react-router"
-import { Redirect, Route } from "react-router-dom"
-import Menu from "./components/Menu"
-import Page from "./pages/Page"
+import { Route } from "react-router-dom"
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css"
@@ -30,13 +28,15 @@ import { Authenticator } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
 import { I18n } from "aws-amplify"
 import { translations } from "@aws-amplify/ui-react"
+import { Sidebar } from "./components/Sidebar"
+import { Dashboard } from "./pages/Dashboard"
 
 import awsExports from "./aws-exports"
 
 Amplify.configure(awsExports)
 setupIonicReact()
-I18n.putVocabularies(translations)
 I18n.setLanguage("pt")
+I18n.putVocabularies(translations)
 I18n.putVocabularies({
   pt: {
     "Your passwords must match": "As senhas não são iguais",
@@ -54,16 +54,16 @@ I18n.putVocabularies({
 
 setupIonicReact()
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   return (
     <IonApp>
       <Authenticator initialState="signIn" loginMechanisms={["email"]} variation="modal">
         <IonReactRouter>
           <IonSplitPane contentId="main">
-            <Menu />
+            <Sidebar />
             <IonRouterOutlet id="main">
               <Route path="/" exact={true}>
-                <Page />
+                <Dashboard />
               </Route>
             </IonRouterOutlet>
           </IonSplitPane>
@@ -72,5 +72,3 @@ const App: React.FC = () => {
     </IonApp>
   )
 }
-
-export default App

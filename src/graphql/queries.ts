@@ -7,7 +7,6 @@ export const getCompany = /* GraphQL */ `
     getCompany(id: $id) {
       id
       name
-      apiKey
       createdAt
       updatedAt
       _version
@@ -26,7 +25,6 @@ export const listCompanies = /* GraphQL */ `
       items {
         id
         name
-        apiKey
         createdAt
         updatedAt
         _version
@@ -54,7 +52,6 @@ export const syncCompanies = /* GraphQL */ `
       items {
         id
         name
-        apiKey
         createdAt
         updatedAt
         _version
@@ -66,13 +63,18 @@ export const syncCompanies = /* GraphQL */ `
     }
   }
 `;
-export const getPaymentIntent = /* GraphQL */ `
-  query GetPaymentIntent($id: ID!) {
-    getPaymentIntent(id: $id) {
+export const getCharge = /* GraphQL */ `
+  query GetCharge($id: ID!) {
+    getCharge(id: $id) {
       id
+      code
       companyID
+      amount
+      expiresAt
+      description
       customerID
       createdAt
+      state
       updatedAt
       _version
       _deleted
@@ -80,18 +82,23 @@ export const getPaymentIntent = /* GraphQL */ `
     }
   }
 `;
-export const listPaymentIntents = /* GraphQL */ `
-  query ListPaymentIntents(
-    $filter: ModelPaymentIntentFilterInput
+export const listCharges = /* GraphQL */ `
+  query ListCharges(
+    $filter: ModelChargeFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPaymentIntents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listCharges(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        code
         companyID
+        amount
+        expiresAt
+        description
         customerID
         createdAt
+        state
         updatedAt
         _version
         _deleted
@@ -102,14 +109,14 @@ export const listPaymentIntents = /* GraphQL */ `
     }
   }
 `;
-export const syncPaymentIntents = /* GraphQL */ `
-  query SyncPaymentIntents(
-    $filter: ModelPaymentIntentFilterInput
+export const syncCharges = /* GraphQL */ `
+  query SyncCharges(
+    $filter: ModelChargeFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncPaymentIntents(
+    syncCharges(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -117,9 +124,14 @@ export const syncPaymentIntents = /* GraphQL */ `
     ) {
       items {
         id
+        code
         companyID
+        amount
+        expiresAt
+        description
         customerID
         createdAt
+        state
         updatedAt
         _version
         _deleted
@@ -131,26 +143,13 @@ export const syncPaymentIntents = /* GraphQL */ `
   }
 `;
 export const getCustomer = /* GraphQL */ `
-  query GetCustomer($quicID: ID!) {
-    getCustomer(quicID: $quicID) {
+  query GetCustomer($id: ID!) {
+    getCustomer(id: $id) {
+      id
       quicID
       firstName
       lastName
       cpf
-      paymentIntents {
-        items {
-          id
-          companyID
-          customerID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       createdAt
       updatedAt
       _version
@@ -161,28 +160,17 @@ export const getCustomer = /* GraphQL */ `
 `;
 export const listCustomers = /* GraphQL */ `
   query ListCustomers(
-    $quicID: ID
     $filter: ModelCustomerFilterInput
     $limit: Int
     $nextToken: String
-    $sortDirection: ModelSortDirection
   ) {
-    listCustomers(
-      quicID: $quicID
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listCustomers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        id
         quicID
         firstName
         lastName
         cpf
-        paymentIntents {
-          nextToken
-          startedAt
-        }
         createdAt
         updatedAt
         _version
@@ -208,14 +196,11 @@ export const syncCustomers = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
+        id
         quicID
         firstName
         lastName
         cpf
-        paymentIntents {
-          nextToken
-          startedAt
-        }
         createdAt
         updatedAt
         _version

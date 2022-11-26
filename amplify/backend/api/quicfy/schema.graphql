@@ -6,7 +6,6 @@ input AMPLIFY {
 type Company @model {
   id: ID!
   name: String!
-  apiKey: String
   # webhooks: [Webhook] @hasMany(indexName: "byCompany", fields: ["id"])
 }
 
@@ -16,23 +15,34 @@ type Company @model {
 #   url: String!
 #   event: WebhookEvent! @index(name: "byEvent")
 # }
+# enum WebhookEvent {
+#   new_payment
+# }
 
-type PaymentIntent @model {
+type Charge @model @auth(rules: [{ allow: owner, operations: [create, delete] }]) {
+  # TTL
+  # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/howitworks-ttl.html
   id: ID!
-  companyID: ID!
-  customerID: ID! @index(name: "byCustomer", sortKeyFields: ["createdAt"])
+  code: String!
+  amount: Int!
+  expiresAt: AWSDateTime @index
+  description: String
+  customerID: ID
   createdAt: AWSDateTime!
+  state: ChargeState @index @default(value: "pending")
+}
+
+enum ChargeState {
+  pending
+  paid
+  canceled
 }
 
 type Customer @model {
-  quicID: ID! @primaryKey
+  id: ID!
+  quicID: ID! @index
   firstName: String
   lastName: String
   cpf: String
-  paymentIntents: [PaymentIntent]
-    @hasMany(indexName: "byCustomer", fields: ["quicID"])
-}
-
-enum WebhookEvent {
-  new_payment
+  # charges: [Charges] @hasMany(indexName: "byCustomer", fields: ["quicID"])
 }

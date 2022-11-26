@@ -10,7 +10,6 @@ export const createCompany = /* GraphQL */ `
     createCompany(input: $input, condition: $condition) {
       id
       name
-      apiKey
       createdAt
       updatedAt
       _version
@@ -27,7 +26,6 @@ export const updateCompany = /* GraphQL */ `
     updateCompany(input: $input, condition: $condition) {
       id
       name
-      apiKey
       createdAt
       updatedAt
       _version
@@ -44,7 +42,6 @@ export const deleteCompany = /* GraphQL */ `
     deleteCompany(input: $input, condition: $condition) {
       id
       name
-      apiKey
       createdAt
       updatedAt
       _version
@@ -53,16 +50,21 @@ export const deleteCompany = /* GraphQL */ `
     }
   }
 `;
-export const createPaymentIntent = /* GraphQL */ `
-  mutation CreatePaymentIntent(
-    $input: CreatePaymentIntentInput!
-    $condition: ModelPaymentIntentConditionInput
+export const createCharge = /* GraphQL */ `
+  mutation CreateCharge(
+    $input: CreateChargeInput!
+    $condition: ModelChargeConditionInput
   ) {
-    createPaymentIntent(input: $input, condition: $condition) {
+    createCharge(input: $input, condition: $condition) {
       id
+      code
       companyID
+      amount
+      expiresAt
+      description
       customerID
       createdAt
+      state
       updatedAt
       _version
       _deleted
@@ -70,16 +72,21 @@ export const createPaymentIntent = /* GraphQL */ `
     }
   }
 `;
-export const updatePaymentIntent = /* GraphQL */ `
-  mutation UpdatePaymentIntent(
-    $input: UpdatePaymentIntentInput!
-    $condition: ModelPaymentIntentConditionInput
+export const updateCharge = /* GraphQL */ `
+  mutation UpdateCharge(
+    $input: UpdateChargeInput!
+    $condition: ModelChargeConditionInput
   ) {
-    updatePaymentIntent(input: $input, condition: $condition) {
+    updateCharge(input: $input, condition: $condition) {
       id
+      code
       companyID
+      amount
+      expiresAt
+      description
       customerID
       createdAt
+      state
       updatedAt
       _version
       _deleted
@@ -87,16 +94,21 @@ export const updatePaymentIntent = /* GraphQL */ `
     }
   }
 `;
-export const deletePaymentIntent = /* GraphQL */ `
-  mutation DeletePaymentIntent(
-    $input: DeletePaymentIntentInput!
-    $condition: ModelPaymentIntentConditionInput
+export const deleteCharge = /* GraphQL */ `
+  mutation DeleteCharge(
+    $input: DeleteChargeInput!
+    $condition: ModelChargeConditionInput
   ) {
-    deletePaymentIntent(input: $input, condition: $condition) {
+    deleteCharge(input: $input, condition: $condition) {
       id
+      code
       companyID
+      amount
+      expiresAt
+      description
       customerID
       createdAt
+      state
       updatedAt
       _version
       _deleted
@@ -110,24 +122,11 @@ export const createCustomer = /* GraphQL */ `
     $condition: ModelCustomerConditionInput
   ) {
     createCustomer(input: $input, condition: $condition) {
+      id
       quicID
       firstName
       lastName
       cpf
-      paymentIntents {
-        items {
-          id
-          companyID
-          customerID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       createdAt
       updatedAt
       _version
@@ -142,24 +141,11 @@ export const updateCustomer = /* GraphQL */ `
     $condition: ModelCustomerConditionInput
   ) {
     updateCustomer(input: $input, condition: $condition) {
+      id
       quicID
       firstName
       lastName
       cpf
-      paymentIntents {
-        items {
-          id
-          companyID
-          customerID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       createdAt
       updatedAt
       _version
@@ -174,24 +160,11 @@ export const deleteCustomer = /* GraphQL */ `
     $condition: ModelCustomerConditionInput
   ) {
     deleteCustomer(input: $input, condition: $condition) {
+      id
       quicID
       firstName
       lastName
       cpf
-      paymentIntents {
-        items {
-          id
-          companyID
-          customerID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       createdAt
       updatedAt
       _version

@@ -7,7 +7,6 @@ export const onCreateCompany = /* GraphQL */ `
     onCreateCompany(filter: $filter) {
       id
       name
-      apiKey
       createdAt
       updatedAt
       _version
@@ -21,7 +20,6 @@ export const onUpdateCompany = /* GraphQL */ `
     onUpdateCompany(filter: $filter) {
       id
       name
-      apiKey
       createdAt
       updatedAt
       _version
@@ -35,7 +33,6 @@ export const onDeleteCompany = /* GraphQL */ `
     onDeleteCompany(filter: $filter) {
       id
       name
-      apiKey
       createdAt
       updatedAt
       _version
@@ -44,15 +41,18 @@ export const onDeleteCompany = /* GraphQL */ `
     }
   }
 `;
-export const onCreatePaymentIntent = /* GraphQL */ `
-  subscription OnCreatePaymentIntent(
-    $filter: ModelSubscriptionPaymentIntentFilterInput
-  ) {
-    onCreatePaymentIntent(filter: $filter) {
+export const onCreateCharge = /* GraphQL */ `
+  subscription OnCreateCharge($filter: ModelSubscriptionChargeFilterInput) {
+    onCreateCharge(filter: $filter) {
       id
+      code
       companyID
+      amount
+      expiresAt
+      description
       customerID
       createdAt
+      state
       updatedAt
       _version
       _deleted
@@ -60,15 +60,18 @@ export const onCreatePaymentIntent = /* GraphQL */ `
     }
   }
 `;
-export const onUpdatePaymentIntent = /* GraphQL */ `
-  subscription OnUpdatePaymentIntent(
-    $filter: ModelSubscriptionPaymentIntentFilterInput
-  ) {
-    onUpdatePaymentIntent(filter: $filter) {
+export const onUpdateCharge = /* GraphQL */ `
+  subscription OnUpdateCharge($filter: ModelSubscriptionChargeFilterInput) {
+    onUpdateCharge(filter: $filter) {
       id
+      code
       companyID
+      amount
+      expiresAt
+      description
       customerID
       createdAt
+      state
       updatedAt
       _version
       _deleted
@@ -76,15 +79,18 @@ export const onUpdatePaymentIntent = /* GraphQL */ `
     }
   }
 `;
-export const onDeletePaymentIntent = /* GraphQL */ `
-  subscription OnDeletePaymentIntent(
-    $filter: ModelSubscriptionPaymentIntentFilterInput
-  ) {
-    onDeletePaymentIntent(filter: $filter) {
+export const onDeleteCharge = /* GraphQL */ `
+  subscription OnDeleteCharge($filter: ModelSubscriptionChargeFilterInput) {
+    onDeleteCharge(filter: $filter) {
       id
+      code
       companyID
+      amount
+      expiresAt
+      description
       customerID
       createdAt
+      state
       updatedAt
       _version
       _deleted
@@ -95,24 +101,11 @@ export const onDeletePaymentIntent = /* GraphQL */ `
 export const onCreateCustomer = /* GraphQL */ `
   subscription OnCreateCustomer($filter: ModelSubscriptionCustomerFilterInput) {
     onCreateCustomer(filter: $filter) {
+      id
       quicID
       firstName
       lastName
       cpf
-      paymentIntents {
-        items {
-          id
-          companyID
-          customerID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       createdAt
       updatedAt
       _version
@@ -124,24 +117,11 @@ export const onCreateCustomer = /* GraphQL */ `
 export const onUpdateCustomer = /* GraphQL */ `
   subscription OnUpdateCustomer($filter: ModelSubscriptionCustomerFilterInput) {
     onUpdateCustomer(filter: $filter) {
+      id
       quicID
       firstName
       lastName
       cpf
-      paymentIntents {
-        items {
-          id
-          companyID
-          customerID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       createdAt
       updatedAt
       _version
@@ -153,24 +133,11 @@ export const onUpdateCustomer = /* GraphQL */ `
 export const onDeleteCustomer = /* GraphQL */ `
   subscription OnDeleteCustomer($filter: ModelSubscriptionCustomerFilterInput) {
     onDeleteCustomer(filter: $filter) {
+      id
       quicID
       firstName
       lastName
       cpf
-      paymentIntents {
-        items {
-          id
-          companyID
-          customerID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       createdAt
       updatedAt
       _version

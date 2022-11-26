@@ -5,13 +5,11 @@
 export type CreateCompanyInput = {
   id?: string | null,
   name: string,
-  apiKey?: string | null,
   _version?: number | null,
 };
 
 export type ModelCompanyConditionInput = {
   name?: ModelStringInput | null,
-  apiKey?: ModelStringInput | null,
   and?: Array< ModelCompanyConditionInput | null > | null,
   or?: Array< ModelCompanyConditionInput | null > | null,
   not?: ModelCompanyConditionInput | null,
@@ -61,7 +59,6 @@ export type Company = {
   __typename: "Company",
   id: string,
   name: string,
-  apiKey?: string | null,
   createdAt: string,
   updatedAt: string,
   _version: number,
@@ -72,7 +69,6 @@ export type Company = {
 export type UpdateCompanyInput = {
   id: string,
   name?: string | null,
-  apiKey?: string | null,
   _version?: number | null,
 };
 
@@ -81,21 +77,38 @@ export type DeleteCompanyInput = {
   _version?: number | null,
 };
 
-export type CreatePaymentIntentInput = {
+export type CreateChargeInput = {
   id?: string | null,
+  code: string,
   companyID: string,
-  customerID: string,
+  amount: number,
+  expiresAt?: string | null,
+  description?: string | null,
+  customerID?: string | null,
   createdAt?: string | null,
+  state?: ChargeState | null,
   _version?: number | null,
 };
 
-export type ModelPaymentIntentConditionInput = {
+export enum ChargeState {
+  pending = "pending",
+  paid = "paid",
+  canceled = "canceled",
+}
+
+
+export type ModelChargeConditionInput = {
+  code?: ModelStringInput | null,
   companyID?: ModelIDInput | null,
+  amount?: ModelIntInput | null,
+  expiresAt?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   customerID?: ModelIDInput | null,
   createdAt?: ModelStringInput | null,
-  and?: Array< ModelPaymentIntentConditionInput | null > | null,
-  or?: Array< ModelPaymentIntentConditionInput | null > | null,
-  not?: ModelPaymentIntentConditionInput | null,
+  state?: ModelChargeStateInput | null,
+  and?: Array< ModelChargeConditionInput | null > | null,
+  or?: Array< ModelChargeConditionInput | null > | null,
+  not?: ModelChargeConditionInput | null,
 };
 
 export type ModelIDInput = {
@@ -114,32 +127,60 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type PaymentIntent = {
-  __typename: "PaymentIntent",
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelChargeStateInput = {
+  eq?: ChargeState | null,
+  ne?: ChargeState | null,
+};
+
+export type Charge = {
+  __typename: "Charge",
   id: string,
+  code: string,
   companyID: string,
-  customerID: string,
+  amount: number,
+  expiresAt?: string | null,
+  description?: string | null,
+  customerID?: string | null,
   createdAt: string,
+  state?: ChargeState | null,
   updatedAt: string,
   _version: number,
   _deleted?: boolean | null,
   _lastChangedAt: number,
 };
 
-export type UpdatePaymentIntentInput = {
+export type UpdateChargeInput = {
   id: string,
+  code?: string | null,
   companyID?: string | null,
+  amount?: number | null,
+  expiresAt?: string | null,
+  description?: string | null,
   customerID?: string | null,
   createdAt?: string | null,
+  state?: ChargeState | null,
   _version?: number | null,
 };
 
-export type DeletePaymentIntentInput = {
+export type DeleteChargeInput = {
   id: string,
   _version?: number | null,
 };
 
 export type CreateCustomerInput = {
+  id?: string | null,
   quicID: string,
   firstName?: string | null,
   lastName?: string | null,
@@ -148,6 +189,7 @@ export type CreateCustomerInput = {
 };
 
 export type ModelCustomerConditionInput = {
+  quicID?: ModelIDInput | null,
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   cpf?: ModelStringInput | null,
@@ -158,11 +200,11 @@ export type ModelCustomerConditionInput = {
 
 export type Customer = {
   __typename: "Customer",
+  id: string,
   quicID: string,
   firstName?: string | null,
   lastName?: string | null,
   cpf?: string | null,
-  paymentIntents?: ModelPaymentIntentConnection | null,
   createdAt: string,
   updatedAt: string,
   _version: number,
@@ -170,15 +212,9 @@ export type Customer = {
   _lastChangedAt: number,
 };
 
-export type ModelPaymentIntentConnection = {
-  __typename: "ModelPaymentIntentConnection",
-  items:  Array<PaymentIntent | null >,
-  nextToken?: string | null,
-  startedAt?: number | null,
-};
-
 export type UpdateCustomerInput = {
-  quicID: string,
+  id: string,
+  quicID?: string | null,
   firstName?: string | null,
   lastName?: string | null,
   cpf?: string | null,
@@ -186,14 +222,13 @@ export type UpdateCustomerInput = {
 };
 
 export type DeleteCustomerInput = {
-  quicID: string,
+  id: string,
   _version?: number | null,
 };
 
 export type ModelCompanyFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
-  apiKey?: ModelStringInput | null,
   and?: Array< ModelCompanyFilterInput | null > | null,
   or?: Array< ModelCompanyFilterInput | null > | null,
   not?: ModelCompanyFilterInput | null,
@@ -206,17 +241,30 @@ export type ModelCompanyConnection = {
   startedAt?: number | null,
 };
 
-export type ModelPaymentIntentFilterInput = {
+export type ModelChargeFilterInput = {
   id?: ModelIDInput | null,
+  code?: ModelStringInput | null,
   companyID?: ModelIDInput | null,
+  amount?: ModelIntInput | null,
+  expiresAt?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   customerID?: ModelIDInput | null,
   createdAt?: ModelStringInput | null,
-  and?: Array< ModelPaymentIntentFilterInput | null > | null,
-  or?: Array< ModelPaymentIntentFilterInput | null > | null,
-  not?: ModelPaymentIntentFilterInput | null,
+  state?: ModelChargeStateInput | null,
+  and?: Array< ModelChargeFilterInput | null > | null,
+  or?: Array< ModelChargeFilterInput | null > | null,
+  not?: ModelChargeFilterInput | null,
+};
+
+export type ModelChargeConnection = {
+  __typename: "ModelChargeConnection",
+  items:  Array<Charge | null >,
+  nextToken?: string | null,
+  startedAt?: number | null,
 };
 
 export type ModelCustomerFilterInput = {
+  id?: ModelIDInput | null,
   quicID?: ModelIDInput | null,
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
@@ -225,12 +273,6 @@ export type ModelCustomerFilterInput = {
   or?: Array< ModelCustomerFilterInput | null > | null,
   not?: ModelCustomerFilterInput | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelCustomerConnection = {
   __typename: "ModelCustomerConnection",
@@ -242,7 +284,6 @@ export type ModelCustomerConnection = {
 export type ModelSubscriptionCompanyFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
-  apiKey?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionCompanyFilterInput | null > | null,
   or?: Array< ModelSubscriptionCompanyFilterInput | null > | null,
 };
@@ -277,16 +318,34 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type ModelSubscriptionPaymentIntentFilterInput = {
+export type ModelSubscriptionChargeFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  code?: ModelSubscriptionStringInput | null,
   companyID?: ModelSubscriptionIDInput | null,
+  amount?: ModelSubscriptionIntInput | null,
+  expiresAt?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
   customerID?: ModelSubscriptionIDInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPaymentIntentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPaymentIntentFilterInput | null > | null,
+  state?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionChargeFilterInput | null > | null,
+  or?: Array< ModelSubscriptionChargeFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
 };
 
 export type ModelSubscriptionCustomerFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
   quicID?: ModelSubscriptionIDInput | null,
   firstName?: ModelSubscriptionStringInput | null,
   lastName?: ModelSubscriptionStringInput | null,
@@ -305,7 +364,6 @@ export type CreateCompanyMutation = {
     __typename: "Company",
     id: string,
     name: string,
-    apiKey?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -324,7 +382,6 @@ export type UpdateCompanyMutation = {
     __typename: "Company",
     id: string,
     name: string,
-    apiKey?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -343,7 +400,6 @@ export type DeleteCompanyMutation = {
     __typename: "Company",
     id: string,
     name: string,
-    apiKey?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -352,18 +408,23 @@ export type DeleteCompanyMutation = {
   } | null,
 };
 
-export type CreatePaymentIntentMutationVariables = {
-  input: CreatePaymentIntentInput,
-  condition?: ModelPaymentIntentConditionInput | null,
+export type CreateChargeMutationVariables = {
+  input: CreateChargeInput,
+  condition?: ModelChargeConditionInput | null,
 };
 
-export type CreatePaymentIntentMutation = {
-  createPaymentIntent?:  {
-    __typename: "PaymentIntent",
+export type CreateChargeMutation = {
+  createCharge?:  {
+    __typename: "Charge",
     id: string,
+    code: string,
     companyID: string,
-    customerID: string,
+    amount: number,
+    expiresAt?: string | null,
+    description?: string | null,
+    customerID?: string | null,
     createdAt: string,
+    state?: ChargeState | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -371,18 +432,23 @@ export type CreatePaymentIntentMutation = {
   } | null,
 };
 
-export type UpdatePaymentIntentMutationVariables = {
-  input: UpdatePaymentIntentInput,
-  condition?: ModelPaymentIntentConditionInput | null,
+export type UpdateChargeMutationVariables = {
+  input: UpdateChargeInput,
+  condition?: ModelChargeConditionInput | null,
 };
 
-export type UpdatePaymentIntentMutation = {
-  updatePaymentIntent?:  {
-    __typename: "PaymentIntent",
+export type UpdateChargeMutation = {
+  updateCharge?:  {
+    __typename: "Charge",
     id: string,
+    code: string,
     companyID: string,
-    customerID: string,
+    amount: number,
+    expiresAt?: string | null,
+    description?: string | null,
+    customerID?: string | null,
     createdAt: string,
+    state?: ChargeState | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -390,18 +456,23 @@ export type UpdatePaymentIntentMutation = {
   } | null,
 };
 
-export type DeletePaymentIntentMutationVariables = {
-  input: DeletePaymentIntentInput,
-  condition?: ModelPaymentIntentConditionInput | null,
+export type DeleteChargeMutationVariables = {
+  input: DeleteChargeInput,
+  condition?: ModelChargeConditionInput | null,
 };
 
-export type DeletePaymentIntentMutation = {
-  deletePaymentIntent?:  {
-    __typename: "PaymentIntent",
+export type DeleteChargeMutation = {
+  deleteCharge?:  {
+    __typename: "Charge",
     id: string,
+    code: string,
     companyID: string,
-    customerID: string,
+    amount: number,
+    expiresAt?: string | null,
+    description?: string | null,
+    customerID?: string | null,
     createdAt: string,
+    state?: ChargeState | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -417,26 +488,11 @@ export type CreateCustomerMutationVariables = {
 export type CreateCustomerMutation = {
   createCustomer?:  {
     __typename: "Customer",
+    id: string,
     quicID: string,
     firstName?: string | null,
     lastName?: string | null,
     cpf?: string | null,
-    paymentIntents?:  {
-      __typename: "ModelPaymentIntentConnection",
-      items:  Array< {
-        __typename: "PaymentIntent",
-        id: string,
-        companyID: string,
-        customerID: string,
-        createdAt: string,
-        updatedAt: string,
-        _version: number,
-        _deleted?: boolean | null,
-        _lastChangedAt: number,
-      } | null >,
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -453,26 +509,11 @@ export type UpdateCustomerMutationVariables = {
 export type UpdateCustomerMutation = {
   updateCustomer?:  {
     __typename: "Customer",
+    id: string,
     quicID: string,
     firstName?: string | null,
     lastName?: string | null,
     cpf?: string | null,
-    paymentIntents?:  {
-      __typename: "ModelPaymentIntentConnection",
-      items:  Array< {
-        __typename: "PaymentIntent",
-        id: string,
-        companyID: string,
-        customerID: string,
-        createdAt: string,
-        updatedAt: string,
-        _version: number,
-        _deleted?: boolean | null,
-        _lastChangedAt: number,
-      } | null >,
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -489,26 +530,11 @@ export type DeleteCustomerMutationVariables = {
 export type DeleteCustomerMutation = {
   deleteCustomer?:  {
     __typename: "Customer",
+    id: string,
     quicID: string,
     firstName?: string | null,
     lastName?: string | null,
     cpf?: string | null,
-    paymentIntents?:  {
-      __typename: "ModelPaymentIntentConnection",
-      items:  Array< {
-        __typename: "PaymentIntent",
-        id: string,
-        companyID: string,
-        customerID: string,
-        createdAt: string,
-        updatedAt: string,
-        _version: number,
-        _deleted?: boolean | null,
-        _lastChangedAt: number,
-      } | null >,
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -526,7 +552,6 @@ export type GetCompanyQuery = {
     __typename: "Company",
     id: string,
     name: string,
-    apiKey?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -548,7 +573,6 @@ export type ListCompaniesQuery = {
       __typename: "Company",
       id: string,
       name: string,
-      apiKey?: string | null,
       createdAt: string,
       updatedAt: string,
       _version: number,
@@ -574,7 +598,6 @@ export type SyncCompaniesQuery = {
       __typename: "Company",
       id: string,
       name: string,
-      apiKey?: string | null,
       createdAt: string,
       updatedAt: string,
       _version: number,
@@ -586,17 +609,22 @@ export type SyncCompaniesQuery = {
   } | null,
 };
 
-export type GetPaymentIntentQueryVariables = {
+export type GetChargeQueryVariables = {
   id: string,
 };
 
-export type GetPaymentIntentQuery = {
-  getPaymentIntent?:  {
-    __typename: "PaymentIntent",
+export type GetChargeQuery = {
+  getCharge?:  {
+    __typename: "Charge",
     id: string,
+    code: string,
     companyID: string,
-    customerID: string,
+    amount: number,
+    expiresAt?: string | null,
+    description?: string | null,
+    customerID?: string | null,
     createdAt: string,
+    state?: ChargeState | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -604,21 +632,26 @@ export type GetPaymentIntentQuery = {
   } | null,
 };
 
-export type ListPaymentIntentsQueryVariables = {
-  filter?: ModelPaymentIntentFilterInput | null,
+export type ListChargesQueryVariables = {
+  filter?: ModelChargeFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListPaymentIntentsQuery = {
-  listPaymentIntents?:  {
-    __typename: "ModelPaymentIntentConnection",
+export type ListChargesQuery = {
+  listCharges?:  {
+    __typename: "ModelChargeConnection",
     items:  Array< {
-      __typename: "PaymentIntent",
+      __typename: "Charge",
       id: string,
+      code: string,
       companyID: string,
-      customerID: string,
+      amount: number,
+      expiresAt?: string | null,
+      description?: string | null,
+      customerID?: string | null,
       createdAt: string,
+      state?: ChargeState | null,
       updatedAt: string,
       _version: number,
       _deleted?: boolean | null,
@@ -629,22 +662,27 @@ export type ListPaymentIntentsQuery = {
   } | null,
 };
 
-export type SyncPaymentIntentsQueryVariables = {
-  filter?: ModelPaymentIntentFilterInput | null,
+export type SyncChargesQueryVariables = {
+  filter?: ModelChargeFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   lastSync?: number | null,
 };
 
-export type SyncPaymentIntentsQuery = {
-  syncPaymentIntents?:  {
-    __typename: "ModelPaymentIntentConnection",
+export type SyncChargesQuery = {
+  syncCharges?:  {
+    __typename: "ModelChargeConnection",
     items:  Array< {
-      __typename: "PaymentIntent",
+      __typename: "Charge",
       id: string,
+      code: string,
       companyID: string,
-      customerID: string,
+      amount: number,
+      expiresAt?: string | null,
+      description?: string | null,
+      customerID?: string | null,
       createdAt: string,
+      state?: ChargeState | null,
       updatedAt: string,
       _version: number,
       _deleted?: boolean | null,
@@ -656,32 +694,17 @@ export type SyncPaymentIntentsQuery = {
 };
 
 export type GetCustomerQueryVariables = {
-  quicID: string,
+  id: string,
 };
 
 export type GetCustomerQuery = {
   getCustomer?:  {
     __typename: "Customer",
+    id: string,
     quicID: string,
     firstName?: string | null,
     lastName?: string | null,
     cpf?: string | null,
-    paymentIntents?:  {
-      __typename: "ModelPaymentIntentConnection",
-      items:  Array< {
-        __typename: "PaymentIntent",
-        id: string,
-        companyID: string,
-        customerID: string,
-        createdAt: string,
-        updatedAt: string,
-        _version: number,
-        _deleted?: boolean | null,
-        _lastChangedAt: number,
-      } | null >,
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -691,11 +714,9 @@ export type GetCustomerQuery = {
 };
 
 export type ListCustomersQueryVariables = {
-  quicID?: string | null,
   filter?: ModelCustomerFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListCustomersQuery = {
@@ -703,15 +724,11 @@ export type ListCustomersQuery = {
     __typename: "ModelCustomerConnection",
     items:  Array< {
       __typename: "Customer",
+      id: string,
       quicID: string,
       firstName?: string | null,
       lastName?: string | null,
       cpf?: string | null,
-      paymentIntents?:  {
-        __typename: "ModelPaymentIntentConnection",
-        nextToken?: string | null,
-        startedAt?: number | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
       _version: number,
@@ -735,15 +752,11 @@ export type SyncCustomersQuery = {
     __typename: "ModelCustomerConnection",
     items:  Array< {
       __typename: "Customer",
+      id: string,
       quicID: string,
       firstName?: string | null,
       lastName?: string | null,
       cpf?: string | null,
-      paymentIntents?:  {
-        __typename: "ModelPaymentIntentConnection",
-        nextToken?: string | null,
-        startedAt?: number | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
       _version: number,
@@ -764,7 +777,6 @@ export type OnCreateCompanySubscription = {
     __typename: "Company",
     id: string,
     name: string,
-    apiKey?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -782,7 +794,6 @@ export type OnUpdateCompanySubscription = {
     __typename: "Company",
     id: string,
     name: string,
-    apiKey?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -800,7 +811,6 @@ export type OnDeleteCompanySubscription = {
     __typename: "Company",
     id: string,
     name: string,
-    apiKey?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -809,17 +819,22 @@ export type OnDeleteCompanySubscription = {
   } | null,
 };
 
-export type OnCreatePaymentIntentSubscriptionVariables = {
-  filter?: ModelSubscriptionPaymentIntentFilterInput | null,
+export type OnCreateChargeSubscriptionVariables = {
+  filter?: ModelSubscriptionChargeFilterInput | null,
 };
 
-export type OnCreatePaymentIntentSubscription = {
-  onCreatePaymentIntent?:  {
-    __typename: "PaymentIntent",
+export type OnCreateChargeSubscription = {
+  onCreateCharge?:  {
+    __typename: "Charge",
     id: string,
+    code: string,
     companyID: string,
-    customerID: string,
+    amount: number,
+    expiresAt?: string | null,
+    description?: string | null,
+    customerID?: string | null,
     createdAt: string,
+    state?: ChargeState | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -827,17 +842,22 @@ export type OnCreatePaymentIntentSubscription = {
   } | null,
 };
 
-export type OnUpdatePaymentIntentSubscriptionVariables = {
-  filter?: ModelSubscriptionPaymentIntentFilterInput | null,
+export type OnUpdateChargeSubscriptionVariables = {
+  filter?: ModelSubscriptionChargeFilterInput | null,
 };
 
-export type OnUpdatePaymentIntentSubscription = {
-  onUpdatePaymentIntent?:  {
-    __typename: "PaymentIntent",
+export type OnUpdateChargeSubscription = {
+  onUpdateCharge?:  {
+    __typename: "Charge",
     id: string,
+    code: string,
     companyID: string,
-    customerID: string,
+    amount: number,
+    expiresAt?: string | null,
+    description?: string | null,
+    customerID?: string | null,
     createdAt: string,
+    state?: ChargeState | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -845,17 +865,22 @@ export type OnUpdatePaymentIntentSubscription = {
   } | null,
 };
 
-export type OnDeletePaymentIntentSubscriptionVariables = {
-  filter?: ModelSubscriptionPaymentIntentFilterInput | null,
+export type OnDeleteChargeSubscriptionVariables = {
+  filter?: ModelSubscriptionChargeFilterInput | null,
 };
 
-export type OnDeletePaymentIntentSubscription = {
-  onDeletePaymentIntent?:  {
-    __typename: "PaymentIntent",
+export type OnDeleteChargeSubscription = {
+  onDeleteCharge?:  {
+    __typename: "Charge",
     id: string,
+    code: string,
     companyID: string,
-    customerID: string,
+    amount: number,
+    expiresAt?: string | null,
+    description?: string | null,
+    customerID?: string | null,
     createdAt: string,
+    state?: ChargeState | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -870,26 +895,11 @@ export type OnCreateCustomerSubscriptionVariables = {
 export type OnCreateCustomerSubscription = {
   onCreateCustomer?:  {
     __typename: "Customer",
+    id: string,
     quicID: string,
     firstName?: string | null,
     lastName?: string | null,
     cpf?: string | null,
-    paymentIntents?:  {
-      __typename: "ModelPaymentIntentConnection",
-      items:  Array< {
-        __typename: "PaymentIntent",
-        id: string,
-        companyID: string,
-        customerID: string,
-        createdAt: string,
-        updatedAt: string,
-        _version: number,
-        _deleted?: boolean | null,
-        _lastChangedAt: number,
-      } | null >,
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -905,26 +915,11 @@ export type OnUpdateCustomerSubscriptionVariables = {
 export type OnUpdateCustomerSubscription = {
   onUpdateCustomer?:  {
     __typename: "Customer",
+    id: string,
     quicID: string,
     firstName?: string | null,
     lastName?: string | null,
     cpf?: string | null,
-    paymentIntents?:  {
-      __typename: "ModelPaymentIntentConnection",
-      items:  Array< {
-        __typename: "PaymentIntent",
-        id: string,
-        companyID: string,
-        customerID: string,
-        createdAt: string,
-        updatedAt: string,
-        _version: number,
-        _deleted?: boolean | null,
-        _lastChangedAt: number,
-      } | null >,
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -940,26 +935,11 @@ export type OnDeleteCustomerSubscriptionVariables = {
 export type OnDeleteCustomerSubscription = {
   onDeleteCustomer?:  {
     __typename: "Customer",
+    id: string,
     quicID: string,
     firstName?: string | null,
     lastName?: string | null,
     cpf?: string | null,
-    paymentIntents?:  {
-      __typename: "ModelPaymentIntentConnection",
-      items:  Array< {
-        __typename: "PaymentIntent",
-        id: string,
-        companyID: string,
-        customerID: string,
-        createdAt: string,
-        updatedAt: string,
-        _version: number,
-        _deleted?: boolean | null,
-        _lastChangedAt: number,
-      } | null >,
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
