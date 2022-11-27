@@ -24,8 +24,16 @@ const randomCode = () => {
   return Math.random().toString().split(".")[1].slice(0, 6)
 }
 
+const currencyToInt = (value: string) => parseInt(value.replace(/[^\d]/g, ""), 10)
+
 const formatCurrency = (value: string) => {
-  const val = parseInt(value.replace(/[^\d]/g, ""), 10)
+  if (value === "") {
+    value = "0"
+  }
+  let val = currencyToInt(value)
+  if (val > 100000_00) {
+    val = 99999_99
+  }
 
   return Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -42,10 +50,15 @@ export const Dashboard: React.FC = () => {
 
   const onSubmit: SubmitHandler<CreateChargeInput> = async (input) => {
     input.expiresAt = formatISO(addMinutes(new Date(), parseInt(input.expiresAt!)))
-    input.code = randomCode()
+    input.temporaryCode = randomCode()
+    input.amount = currencyToInt(input.amount.toString())
+
     console.log(input)
 
-    API.graphql({ query: createCharge, variables: { input } })
+    API.graphql({
+      query: createCharge,
+      variables: { input, condition: { temporaryCode: { ne: input.temporaryCode } } },
+    })
   }
 
   const { onChange, ...amountRegister } = register("amount")

@@ -57,8 +57,7 @@ export const createCharge = /* GraphQL */ `
   ) {
     createCharge(input: $input, condition: $condition) {
       id
-      code
-      companyID
+      temporaryCode
       amount
       expiresAt
       description
@@ -69,6 +68,7 @@ export const createCharge = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
@@ -79,8 +79,7 @@ export const updateCharge = /* GraphQL */ `
   ) {
     updateCharge(input: $input, condition: $condition) {
       id
-      code
-      companyID
+      temporaryCode
       amount
       expiresAt
       description
@@ -91,6 +90,7 @@ export const updateCharge = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
@@ -101,8 +101,7 @@ export const deleteCharge = /* GraphQL */ `
   ) {
     deleteCharge(input: $input, condition: $condition) {
       id
-      code
-      companyID
+      temporaryCode
       amount
       expiresAt
       description
@@ -113,6 +112,7 @@ export const deleteCharge = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;

@@ -1,16 +1,18 @@
 import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
-export enum WebhookEvent {
-  NEW_PAYMENT = "new_payment"
+export enum ChargeState {
+  PENDING = "pending",
+  PAID = "paid",
+  CANCELED = "canceled"
 }
 
 type CompanyMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-type PaymentIntentMetaData = {
+type ChargeMetaData = {
   readOnlyFields: 'updatedAt';
 }
 
@@ -21,7 +23,6 @@ type CustomerMetaData = {
 type EagerCompany = {
   readonly id: string;
   readonly name: string;
-  readonly apiKey?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -29,7 +30,6 @@ type EagerCompany = {
 type LazyCompany = {
   readonly id: string;
   readonly name: string;
-  readonly apiKey?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -40,26 +40,34 @@ export declare const Company: (new (init: ModelInit<Company, CompanyMetaData>) =
   copyOf(source: Company, mutator: (draft: MutableModel<Company, CompanyMetaData>) => MutableModel<Company, CompanyMetaData> | void): Company;
 }
 
-type EagerPaymentIntent = {
+type EagerCharge = {
   readonly id: string;
-  readonly companyID: string;
-  readonly customerID: string;
+  readonly temporaryCode: string;
+  readonly amount: number;
+  readonly expiresAt?: string | null;
+  readonly description?: string | null;
+  readonly customerID?: string | null;
   readonly createdAt: string;
+  readonly state?: ChargeState | keyof typeof ChargeState | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyPaymentIntent = {
+type LazyCharge = {
   readonly id: string;
-  readonly companyID: string;
-  readonly customerID: string;
+  readonly temporaryCode: string;
+  readonly amount: number;
+  readonly expiresAt?: string | null;
+  readonly description?: string | null;
+  readonly customerID?: string | null;
   readonly createdAt: string;
+  readonly state?: ChargeState | keyof typeof ChargeState | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type PaymentIntent = LazyLoading extends LazyLoadingDisabled ? EagerPaymentIntent : LazyPaymentIntent
+export declare type Charge = LazyLoading extends LazyLoadingDisabled ? EagerCharge : LazyCharge
 
-export declare const PaymentIntent: (new (init: ModelInit<PaymentIntent, PaymentIntentMetaData>) => PaymentIntent) & {
-  copyOf(source: PaymentIntent, mutator: (draft: MutableModel<PaymentIntent, PaymentIntentMetaData>) => MutableModel<PaymentIntent, PaymentIntentMetaData> | void): PaymentIntent;
+export declare const Charge: (new (init: ModelInit<Charge, ChargeMetaData>) => Charge) & {
+  copyOf(source: Charge, mutator: (draft: MutableModel<Charge, ChargeMetaData>) => MutableModel<Charge, ChargeMetaData> | void): Charge;
 }
 
 type EagerCustomer = {
@@ -68,7 +76,6 @@ type EagerCustomer = {
   readonly firstName?: string | null;
   readonly lastName?: string | null;
   readonly cpf?: string | null;
-  readonly paymentIntents?: (PaymentIntent | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -79,7 +86,6 @@ type LazyCustomer = {
   readonly firstName?: string | null;
   readonly lastName?: string | null;
   readonly cpf?: string | null;
-  readonly paymentIntents: AsyncCollection<PaymentIntent>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

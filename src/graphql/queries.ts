@@ -67,8 +67,7 @@ export const getCharge = /* GraphQL */ `
   query GetCharge($id: ID!) {
     getCharge(id: $id) {
       id
-      code
-      companyID
+      temporaryCode
       amount
       expiresAt
       description
@@ -79,6 +78,7 @@ export const getCharge = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
@@ -91,8 +91,7 @@ export const listCharges = /* GraphQL */ `
     listCharges(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        code
-        companyID
+        temporaryCode
         amount
         expiresAt
         description
@@ -103,6 +102,7 @@ export const listCharges = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        owner
       }
       nextToken
       startedAt
@@ -124,8 +124,7 @@ export const syncCharges = /* GraphQL */ `
     ) {
       items {
         id
-        code
-        companyID
+        temporaryCode
         amount
         expiresAt
         description
@@ -136,6 +135,7 @@ export const syncCharges = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        owner
       }
       nextToken
       startedAt

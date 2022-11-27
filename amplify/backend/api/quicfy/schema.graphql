@@ -19,11 +19,11 @@ type Company @model {
 #   new_payment
 # }
 
-type Charge @model @auth(rules: [{ allow: owner, operations: [create, delete] }]) {
+type Charge @model @auth(rules: [{ allow: owner, operations: [create] }]) {
   # TTL
   # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/howitworks-ttl.html
   id: ID!
-  code: String!
+  temporaryCode: String!
   amount: Int!
   expiresAt: AWSDateTime @index
   description: String

@@ -45,8 +45,7 @@ export const onCreateCharge = /* GraphQL */ `
   subscription OnCreateCharge($filter: ModelSubscriptionChargeFilterInput) {
     onCreateCharge(filter: $filter) {
       id
-      code
-      companyID
+      temporaryCode
       amount
       expiresAt
       description
@@ -57,6 +56,7 @@ export const onCreateCharge = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
@@ -64,8 +64,7 @@ export const onUpdateCharge = /* GraphQL */ `
   subscription OnUpdateCharge($filter: ModelSubscriptionChargeFilterInput) {
     onUpdateCharge(filter: $filter) {
       id
-      code
-      companyID
+      temporaryCode
       amount
       expiresAt
       description
@@ -76,6 +75,7 @@ export const onUpdateCharge = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
@@ -83,8 +83,7 @@ export const onDeleteCharge = /* GraphQL */ `
   subscription OnDeleteCharge($filter: ModelSubscriptionChargeFilterInput) {
     onDeleteCharge(filter: $filter) {
       id
-      code
-      companyID
+      temporaryCode
       amount
       expiresAt
       description
@@ -95,6 +94,7 @@ export const onDeleteCharge = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;

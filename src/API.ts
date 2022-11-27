@@ -79,8 +79,7 @@ export type DeleteCompanyInput = {
 
 export type CreateChargeInput = {
   id?: string | null,
-  code: string,
-  companyID: string,
+  temporaryCode: string,
   amount: number,
   expiresAt?: string | null,
   description?: string | null,
@@ -98,8 +97,7 @@ export enum ChargeState {
 
 
 export type ModelChargeConditionInput = {
-  code?: ModelStringInput | null,
-  companyID?: ModelIDInput | null,
+  temporaryCode?: ModelStringInput | null,
   amount?: ModelIntInput | null,
   expiresAt?: ModelStringInput | null,
   description?: ModelStringInput | null,
@@ -109,6 +107,18 @@ export type ModelChargeConditionInput = {
   and?: Array< ModelChargeConditionInput | null > | null,
   or?: Array< ModelChargeConditionInput | null > | null,
   not?: ModelChargeConditionInput | null,
+};
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type ModelIDInput = {
@@ -127,18 +137,6 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type ModelChargeStateInput = {
   eq?: ChargeState | null,
   ne?: ChargeState | null,
@@ -147,8 +145,7 @@ export type ModelChargeStateInput = {
 export type Charge = {
   __typename: "Charge",
   id: string,
-  code: string,
-  companyID: string,
+  temporaryCode: string,
   amount: number,
   expiresAt?: string | null,
   description?: string | null,
@@ -159,12 +156,12 @@ export type Charge = {
   _version: number,
   _deleted?: boolean | null,
   _lastChangedAt: number,
+  owner?: string | null,
 };
 
 export type UpdateChargeInput = {
   id: string,
-  code?: string | null,
-  companyID?: string | null,
+  temporaryCode?: string | null,
   amount?: number | null,
   expiresAt?: string | null,
   description?: string | null,
@@ -243,8 +240,7 @@ export type ModelCompanyConnection = {
 
 export type ModelChargeFilterInput = {
   id?: ModelIDInput | null,
-  code?: ModelStringInput | null,
-  companyID?: ModelIDInput | null,
+  temporaryCode?: ModelStringInput | null,
   amount?: ModelIntInput | null,
   expiresAt?: ModelStringInput | null,
   description?: ModelStringInput | null,
@@ -320,8 +316,7 @@ export type ModelSubscriptionStringInput = {
 
 export type ModelSubscriptionChargeFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  code?: ModelSubscriptionStringInput | null,
-  companyID?: ModelSubscriptionIDInput | null,
+  temporaryCode?: ModelSubscriptionStringInput | null,
   amount?: ModelSubscriptionIntInput | null,
   expiresAt?: ModelSubscriptionStringInput | null,
   description?: ModelSubscriptionStringInput | null,
@@ -417,8 +412,7 @@ export type CreateChargeMutation = {
   createCharge?:  {
     __typename: "Charge",
     id: string,
-    code: string,
-    companyID: string,
+    temporaryCode: string,
     amount: number,
     expiresAt?: string | null,
     description?: string | null,
@@ -429,6 +423,7 @@ export type CreateChargeMutation = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
@@ -441,8 +436,7 @@ export type UpdateChargeMutation = {
   updateCharge?:  {
     __typename: "Charge",
     id: string,
-    code: string,
-    companyID: string,
+    temporaryCode: string,
     amount: number,
     expiresAt?: string | null,
     description?: string | null,
@@ -453,6 +447,7 @@ export type UpdateChargeMutation = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
@@ -465,8 +460,7 @@ export type DeleteChargeMutation = {
   deleteCharge?:  {
     __typename: "Charge",
     id: string,
-    code: string,
-    companyID: string,
+    temporaryCode: string,
     amount: number,
     expiresAt?: string | null,
     description?: string | null,
@@ -477,6 +471,7 @@ export type DeleteChargeMutation = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
@@ -617,8 +612,7 @@ export type GetChargeQuery = {
   getCharge?:  {
     __typename: "Charge",
     id: string,
-    code: string,
-    companyID: string,
+    temporaryCode: string,
     amount: number,
     expiresAt?: string | null,
     description?: string | null,
@@ -629,6 +623,7 @@ export type GetChargeQuery = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
@@ -644,8 +639,7 @@ export type ListChargesQuery = {
     items:  Array< {
       __typename: "Charge",
       id: string,
-      code: string,
-      companyID: string,
+      temporaryCode: string,
       amount: number,
       expiresAt?: string | null,
       description?: string | null,
@@ -656,6 +650,7 @@ export type ListChargesQuery = {
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -675,8 +670,7 @@ export type SyncChargesQuery = {
     items:  Array< {
       __typename: "Charge",
       id: string,
-      code: string,
-      companyID: string,
+      temporaryCode: string,
       amount: number,
       expiresAt?: string | null,
       description?: string | null,
@@ -687,6 +681,7 @@ export type SyncChargesQuery = {
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
     startedAt?: number | null,
@@ -827,8 +822,7 @@ export type OnCreateChargeSubscription = {
   onCreateCharge?:  {
     __typename: "Charge",
     id: string,
-    code: string,
-    companyID: string,
+    temporaryCode: string,
     amount: number,
     expiresAt?: string | null,
     description?: string | null,
@@ -839,6 +833,7 @@ export type OnCreateChargeSubscription = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
@@ -850,8 +845,7 @@ export type OnUpdateChargeSubscription = {
   onUpdateCharge?:  {
     __typename: "Charge",
     id: string,
-    code: string,
-    companyID: string,
+    temporaryCode: string,
     amount: number,
     expiresAt?: string | null,
     description?: string | null,
@@ -862,6 +856,7 @@ export type OnUpdateChargeSubscription = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
@@ -873,8 +868,7 @@ export type OnDeleteChargeSubscription = {
   onDeleteCharge?:  {
     __typename: "Charge",
     id: string,
-    code: string,
-    companyID: string,
+    temporaryCode: string,
     amount: number,
     expiresAt?: string | null,
     description?: string | null,
@@ -885,6 +879,7 @@ export type OnDeleteChargeSubscription = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 

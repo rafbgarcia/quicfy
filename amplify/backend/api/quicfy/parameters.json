@@ -1,5 +1,11 @@
 {
   "AppSyncApiName": "quicfy",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authquicfy5f5e08ff",
+      "Outputs.UserPoolId"
+    ]
+  }
 }

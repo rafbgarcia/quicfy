@@ -17,13 +17,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "apiKey": {
-                    "name": "apiKey",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -50,8 +43,8 @@ export const schema = {
                 }
             ]
         },
-        "PaymentIntent": {
-            "name": "PaymentIntent",
+        "Charge": {
+            "name": "Charge",
             "fields": {
                 "id": {
                     "name": "id",
@@ -60,18 +53,39 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "companyID": {
-                    "name": "companyID",
+                "temporaryCode": {
+                    "name": "temporaryCode",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "String",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "amount": {
+                    "name": "amount",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "expiresAt": {
+                    "name": "expiresAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "description": {
+                    "name": "description",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "customerID": {
                     "name": "customerID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "createdAt": {
@@ -79,6 +93,15 @@ export const schema = {
                     "isArray": false,
                     "type": "AWSDateTime",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "state": {
+                    "name": "state",
+                    "isArray": false,
+                    "type": {
+                        "enum": "ChargeState"
+                    },
+                    "isRequired": false,
                     "attributes": []
                 },
                 "updatedAt": {
@@ -91,7 +114,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "PaymentIntents",
+            "pluralName": "Charges",
             "attributes": [
                 {
                     "type": "model",
@@ -100,10 +123,33 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byCustomer",
                         "fields": [
-                            "customerID",
-                            "createdAt"
+                            "expiresAt"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "fields": [
+                            "state"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "delete"
+                                ],
+                                "identityClaim": "cognito:username"
+                            }
                         ]
                     }
                 }
@@ -147,20 +193,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "paymentIntents": {
-                    "name": "paymentIntents",
-                    "isArray": true,
-                    "type": {
-                        "model": "PaymentIntent"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "customerID"
-                    }
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -197,14 +229,16 @@ export const schema = {
         }
     },
     "enums": {
-        "WebhookEvent": {
-            "name": "WebhookEvent",
+        "ChargeState": {
+            "name": "ChargeState",
             "values": [
-                "new_payment"
+                "pending",
+                "paid",
+                "canceled"
             ]
         }
     },
     "nonModels": {},
     "codegenVersion": "3.3.2",
-    "version": "bf7663c99ebd209007e9f78c398e9b2e"
+    "version": "bf31fefd5262afd43e332bb7e18a3f5f"
 };
