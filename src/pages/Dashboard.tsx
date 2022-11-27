@@ -18,9 +18,19 @@ import { CreateChargeInput } from "../API"
 import addMinutes from "date-fns/addMinutes"
 import formatISO from "date-fns/formatISO"
 import { createCharge } from "../graphql/mutations"
+import { useEffect } from "react"
 
 const randomCode = () => {
   return Math.random().toString().split(".")[1].slice(0, 6)
+}
+
+const formatCurrency = (value: string) => {
+  const val = parseInt(value.replace(/[^\d]/g, ""), 10)
+
+  return Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(val / 100)
 }
 
 export const Dashboard: React.FC = () => {
@@ -28,7 +38,7 @@ export const Dashboard: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<CreateChargeInput>({ defaultValues: { expiresAt: "5" } })
+  } = useForm<CreateChargeInput>({ defaultValues: { expiresAt: "5", amount: 0 } })
 
   const onSubmit: SubmitHandler<CreateChargeInput> = async (input) => {
     input.expiresAt = formatISO(addMinutes(new Date(), parseInt(input.expiresAt!)))
@@ -36,6 +46,11 @@ export const Dashboard: React.FC = () => {
     console.log(input)
 
     API.graphql({ query: createCharge, variables: { input } })
+  }
+
+  const { onChange, ...amountRegister } = register("amount")
+  const handleChangeAmount = (e: any) => {
+    e.target.value = formatCurrency(e.target.value)
   }
 
   return (
@@ -63,7 +78,7 @@ export const Dashboard: React.FC = () => {
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Valor (R$)</IonLabel>
-            <IonInput type="number" {...register("amount")} />
+            <IonInput type="text" {...amountRegister} onIonChange={handleChangeAmount} />
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Expira em (minutos)</IonLabel>

@@ -13,10 +13,6 @@
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-quicfy-main-234548-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "auth": {
-        "userPoolGroups": {},
-        "quicfyauth": {}
-      },
       "api": {
         "quicfy": {}
       }
